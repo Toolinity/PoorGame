@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spend Billionaire's Fortune</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --accent-color: #FF9800;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --ad-bg: #f5f5f5;
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-color: #5CDD70;
+            --secondary-color: #3498db;
+            --accent-color: #FFA726;
+            --text-color: #f5f5f5;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --header-bg: #1a1a1a;
+            --ad-bg: #2a2a2a;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 180px 1fr 180px;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+
+        .ad-space {
+            background-color: var(--ad-bg);
+            border-radius: 8px;
+            padding: 15px;
+            height: calc(100vh - 30px);
+            position: sticky;
+            top: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .ad-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--header-bg);
+            box-shadow: var(--shadow);
+            padding: 15px 20px;
+            z-index: 50;
+            transition: var(--transition);
+        }
+
+        .money-display {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .toggle-theme {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-theme:hover {
+            background-color: rgba(128, 128, 128, 0.1);
+        }
+
+        .action-buttons button {
+            transition: var(--transition);
+        }
+
+        .action-buttons button:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin: 20px 0;
+            transition: var(--transition);
+        }
+
+        .progress-container {
+            margin: 15px 0;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: var(--primary-color);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .filter-btn {
+            background-color: var(--card-bg);
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .item-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            transform: translateY(0);
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .qty-btn {
+            transition: var(--transition);
+        }
+
+        .qty-btn:hover:not(:disabled) {
+            background-color: rgba(128, 128, 128, 0.1);
+        }
+
+        .buy-btn {
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .buy-btn:hover {
+            opacity: 0.9;
+        }
+
+        .cart-summary {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin: 20px 0;
+            transition: var(--transition);
+        }
+
+        .receipt-btn {
+            background-color: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .receipt-btn:hover {
+            opacity: 0.9;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+            transition: var(--transition);
+            transform: translateY(20px);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes pulse {
+            0% {transform: scale(1);}
+            50% {transform: scale(1.05);}
+            100% {transform: scale(1);}
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @media print {
+            .ad-space {
+                display: none;
+            }
+            
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal {
+                position: static;
+                display: block;
+                opacity: 1;
+                visibility: visible;
+                background-color: transparent;
+            }
+            
+            .modal-content {
+                max-width: 100%;
+                transform: none;
+                box-shadow: none;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 120px 1fr 120px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .ad-space {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="sticky top-0 z-50">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold">Spend Billionaire's Fortune</h1>
+            <div class="money-display" id="moneyDisplay">$100,000,000,000</div>
+            <div class="action-buttons flex gap-2 mt-3 md:mt-0">
+                <button id="saveBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" title="Save Progress">
+                    <i class="fas fa-save mr-1"></i> Save
+                </button>
+                <button id="resetBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded" title="Reset All">
+                    <i class="fas fa-trash mr-1"></i> Reset
+                </button>
+                <button id="themeToggle" class="toggle-theme" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Left Ad Space -->
+        <div class="ad-space">
+            <div class="ad-label">Advertisement</div>
+            <div class="ad-content flex flex-col items-center">
+                <div class="w-full h-64 bg-gray-300 flex items-center justify-center mb-4">
+                    <span class="text-gray-500">Ad Space</span>
+                </div>
+                <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
+                    <span class="text-gray-500">Ad Space</span>
+                </div>
+            </div>
+            <div class="text-sm mt-2">Sponsored Content</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="container mx-auto px-4">
+            <div class="stats-container mt-6">
+                <div class="progress-container" title="Money Spent Progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500">Money Spent</div>
+                        <div class="text-xl font-semibold text-blue-500" id="moneySpent">$0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500">Money Remaining</div>
+                        <div class="text-xl font-semibold text-green-500" id="moneyRemaining">$100,000,000,000</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500">Items Purchased</div>
+                        <div class="text-xl font-semibold text-purple-500" id="itemsPurchased">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500">Percentage Spent</div>
+                        <div class="text-xl font-semibold text-orange-500" id="percentageSpent">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-2 my-6" id="filterContainer">
+                <button class="filter-btn active" data-category="all">All Items</button>
+                <button class="filter-btn" data-category="food">Food & Drinks</button>
+                <button class="filter-btn" data-category="tech">Technology</button>
+                <button class="filter-btn" data-category="luxury">Luxury</button>
+                <button class="filter-btn" data-category="vehicle">Vehicles</button>
+                <button class="filter-btn" data-category="property">Property</button>
+                <button class="filter-btn" data-category="extreme">Extreme Purchases</button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="itemsGrid">
+                <!-- Items will be inserted here from JavaScript -->
+            </div>
+
+            <div class="cart-summary mt-8" id="cartSummary">
+                <h2 class="text-xl font-bold mb-4">Your Purchases</h2>
+                <div class="max-h-96 overflow-y-auto" id="cartItems">
+                    <!-- Cart items will be inserted here from JavaScript -->
+                    <div class="empty-cart text-center text-gray-500 py-4">You haven't bought anything yet.</div>
+                </div>
+                <button class="receipt-btn w-full mt-4 text-white py-2 px-4 rounded" id="receiptBtn">
+                    Generate Receipt
+                </button>
+            </div>
+
+            <div class="flex justify-center gap-4 my-8">
+                <button id="twitterShare" class="bg-blue-400 hover:bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:-translate-y-1">
+                    <i class="fab fa-twitter"></i>
+                </button>
+                <button id="facebookShare" class="bg-blue-600 hover:bg-blue-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:-translate-y-1">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button id="whatsappShare" class="bg-green-500 hover:bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:-translate-y-1">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+            </div>
+            
+            <footer class="text-center text-gray-500 py-6">
+                <p>Created by You - Enhanced Version of "Spend Bill Gates' Money" | © 2023</p>
+            </footer>
+        </div>
+        
+        <!-- Right Ad Space -->
+        <div class="ad-space">
+            <div class="ad-label">Advertisement</div>
+            <div class="ad-content flex flex-col items-center">
+                <div class="w-full h-64 bg-gray-300 flex items-center justify-center mb-4">
+                    <span class="text-gray-500">Ad Space</span>
+                </div>
+                <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
+                    <span class="text-gray-500">Ad Space</span>
+                </div>
+            </div>
+            <div class="text-sm mt-2">Sponsored Content</div>
+        </div>
+    </div>
+
+    <div class="modal" id="receiptModal">
+        <div class="modal-content">
+            <button class="absolute top-4 right-4 text-2xl" id="closeModal">&times;</button>
+            <h2 class="text-xl font-bold pb-3 border-b mb-4">Your Receipt</h2>
+            <div id="receiptContent">
+                <div class="text-center mb-6">
+                    <h3 class="text-lg font-semibold">Billionaire Spending Spree</h3>
+                    <div class="text-sm text-gray-500" id="receiptDate"></div>
+                </div>
+                <div id="receiptItems">
+                    <!-- Receipt items will be inserted here from JavaScript -->
+                </div>
+                <div class="border-t border-dashed pt-4 mt-4 flex justify-between font-bold">
+                    <span>Total Spent:</span>
+                    <span id="receiptTotal"></span>
+                </div>
+            </div>
+            <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded mt-6" id="printReceipt">
+                Print Receipt
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initial data
+        const initialMoney = 100000000000; // $100 billion
+        let currentMoney = initialMoney;
+        let cart = [];
+        
+        // Item data with categories
+        const items = [
+            {
+                id: 1,
+                name: "Big Mac",
+                price: 2,
+                image: "https://neal.fun/spend/images/big-mac.jpg",
+                category: "food",
+                description: "The classic McDonald's burger with two beef patties, special sauce, lettuce, cheese, pickles, and onions."
+            },
+            {
+                id: 2,
+                name: "Flip Flops",
+                price: 3,
+                image: "https://neal.fun/spend/images/flip-flops.jpg",
+                category: "luxury",
+                description: "Simple and comfortable beach footwear for casual summer days."
+            },
+            {
+                id: 3,
+                name: "Coca-Cola Pack",
+                price: 5,
+                image: "https://neal.fun/spend/images/coca-cola-pack.jpg",
+                category: "food",
+                description: "A refreshing pack of the world's most popular carbonated soft drink."
+            },
+            {
+                id: 4,
+                name: "Movie Ticket",
+                price: 12,
+                image: "https://neal.fun/spend/images/movie-ticket.jpg",
+                category: "luxury",
+                description: "Standard admission to watch the latest blockbusters on the big screen."
+            },
+            {
+                id: 5,
+                name: "Book",
+                price: 15,
+                image: "https://neal.fun/spend/images/book.jpg",
+                category: "luxury",
+                description: "A hardcover bestseller for your reading pleasure and knowledge."
+            },
+            {
+                id: 6,
+                name: "Lobster Dinner",
+                price: 45,
+                image: "https://neal.fun/spend/images/lobster-dinner.jpg",
+                category: "food",
+                description: "A gourmet seafood dinner featuring fresh lobster with butter and sides."
+            },
+            {
+                id: 7,
+                name: "Video Game",
+                price: 60,
+                image: "https://neal.fun/spend/images/video-game.jpg",
+                category: "tech",
+                description: "The latest AAA gaming title for your favorite console or PC."
+            },
+            {
+                id: 8,
+                name: "Amazon Echo",
+                price: 99,
+                image: "https://neal.fun/spend/images/amazon-echo.jpg",
+                category: "tech",
+                description: "Smart speaker with Alexa, capable of voice interaction and home automation control."
+            },
+            {
+                id: 9,
+                name: "Year of Netflix",
+                price: 100,
+                image: "https://neal.fun/spend/images/year-of-netflix.jpg",
+                category: "tech",
+                description: "One year subscription to the popular streaming service with unlimited movies and shows."
+            },
+            {
+                id: 10,
+                name: "Air Jordans",
+                price: 125,
+                image: "https://neal.fun/spend/images/air-jordans.jpg",
+                category: "luxury",
+                description: "Iconic basketball shoes from the legendary Michael Jordan line."
+            },
+            {
+                id: 11,
+                name: "Airpods",
+                price: 199,
+                image: "https://neal.fun/spend/images/airpods.jpg",
+                category: "tech",
+                description: "Apple's wireless earbuds with quality sound and seamless integration."
+            },
+            {
+                id: 12,
+                name: "Gaming Console",
+                price: 299,
+                image: "https://neal.fun/spend/images/gaming-console.jpg",
+                category: "tech",
+                description: "The latest generation gaming system for immersive entertainment experiences."
+            },
+            {
+                id: 13,
+                name: "Drone",
+                price: 350,
+                image: "https://neal.fun/spend/images/drone.jpg",
+                category: "tech",
+                description: "A remote-controlled flying device with HD camera for aerial photography."
+            },
+            {
+                id: 14,
+                name: "Smartphone",
+                price: 699,
+                image: "https://neal.fun/spend/images/smartphone.jpg",
+                category: "tech",
+                description: "A high-end smartphone with the latest features and technology."
+            },
+            {
+                id: 15,
+                name: "Bike",
+                price: 800,
+                image: "https://neal.fun/spend/images/bike.jpg",
+                category: "vehicle",
+                description: "A quality bicycle for commuting or recreational riding."
+            },
+            {
+                id: 16,
+                name: "Kitten",
+                price: 1500,
+                image: "https://neal.fun/spend/images/kitten.jpg",
+                category: "luxury",
+                description: "An adorable kitten from a reputable breeder, including initial vet care and supplies."
+            },
+            {
+                id: 17,
+                name: "Puppy",
+                price: 1500,
+                image: "https://neal.fun/spend/images/puppy.jpg",
+                category: "luxury",
+                description: "A cute puppy from a reputable breeder, including initial vet care and supplies."
+            },
+            {
+                id: 18,
+                name: "Auto Rickshaw",
+                price: 2300,
+                image: "https://neal.fun/spend/images/auto-rickshaw.jpg",
+                category: "vehicle",
+                description: "A three-wheeled motorized vehicle popular for transportation in many countries."
+            },
+            {
+                id: 19,
+                name: "Horse",
+                price: 2500,
+                image: "https://neal.fun/spend/images/horse.jpg",
+                category: "luxury",
+                description: "A beautiful horse for riding or companionship, excluding ongoing care costs."
+            },
+            {
+                id: 20,
+                name: "Acre of Farmland",
+                price: 3000,
+                image: "https://neal.fun/spend/images/acre-of-farmland.jpg",
+                category: "property",
+                description: "One acre of agricultural land for farming or investment purposes."
+            },
+            {
+                id: 21,
+                name: "Designer Handbag",
+                price: 5500,
+                image: "https://neal.fun/spend/images/designer-handbag.jpg",
+                category: "luxury",
+                description: "A high-end luxury handbag from a prestigious fashion house."
+            },
+            {
+                id: 22,
+                name: "Hot Tub",
+                price: 6000,
+                image: "https://neal.fun/spend/images/hot-tub.jpg",
+                category: "luxury",
+                description: "A relaxing spa tub with jets for hydrotherapy and entertainment."
+            },
+            {
+                id: 23,
+                name: "Luxury Wine",
+                price: 7000,
+                image: "https://neal.fun/spend/images/luxury-wine.jpg",
+                category: "food",
+                description: "A rare vintage bottle from a prestigious winery, perfect for special occasions or investment."
+            },
+            {
+                id: 24,
+                name: "Diamond Ring",
+                price: 10000,
+                image: "https://neal.fun/spend/images/diamond-ring.jpg",
+                category: "luxury",
+                description: "An elegant diamond ring with premium cut, clarity, and setting."
+            },
+            {
+                id: 25,
+                name: "Jet Ski",
+                price: 12000,
+                image: "https://neal.fun/spend/images/jet-ski.jpg",
+                category: "vehicle",
+                description: "A personal watercraft for exciting adventures on lakes and ocean waters."
+            },
+            {
+                id: 26,
+                name: "Rolex",
+                price: 15000,
+                image: "https://neal.fun/spend/images/rolex.jpg",
+                category: "luxury",
+                description: "A prestigious Swiss luxury watch known for precision and craftsmanship."
+            },
+            {
+                id: 27,
+                name: "Ford F-150",
+                price: 30000,
+                image: "https://neal.fun/spend/images/ford-f-150.jpg",
+                category: "vehicle",
+                description: "America's best-selling pickup truck, known for reliability and performance."
+            },
+            {
+                id: 28,
+                name: "Tesla",
+                price: 75000,
+                image: "https://neal.fun/spend/images/tesla.jpg",
+                category: "vehicle",
+                description: "A premium electric vehicle with cutting-edge technology and performance."
+            },
+            {
+                id: 29,
+                name: "Monster Truck",
+                price: 150000,
+                image: "https://neal.fun/spend/images/monster-truck.jpg",
+                category: "vehicle",
+                description: "An enormous modified truck with large wheels and suspension for shows and competitions."
+            },
+            {
+                id: 30,
+                name: "Ferrari",
+                price: 250000,
+                image: "https://neal.fun/spend/images/ferrari.jpg",
+                category: "vehicle",
+                description: "An Italian luxury sports car known for speed, design, and prestigious racing heritage."
+            },
+            {
+                id: 31,
+                name: "Single Family Home",
+                price: 300000,
+                image: "https://neal.fun/spend/images/single-family-home.jpg",
+                category: "property",
+                description: "A standard single-family house in an average American neighborhood."
+            },
+            {
+                id: 32,
+                name: "Gold Bar",
+                price: 700000,
+                image: "https://neal.fun/spend/images/gold-bar.jpg",
+                category: "luxury",
+                description: "A standard 400 oz gold bar, a valuable precious metal investment."
+            },
+            {
+                id: 33,
+                name: "McDonalds Franchise",
+                price: 1500000,
+                image: "https://neal.fun/spend/images/mcdonalds-franchise.jpg",
+                category: "property",
+                description: "A franchise license to own and operate a McDonald's restaurant location."
+            },
+            {
+                id: 34,
+                name: "Superbowl Ad",
+                price: 5250000,
+                image: "https://neal.fun/spend/images/superbowl-ad.jpg",
+                category: "luxury",
+                description: "A 30-second advertisement slot during the Super Bowl, the most-watched TV event."
+            },
+            {
+                id: 35,
+                name: "Yacht",
+                price: 7500000,
+                image: "https://neal.fun/spend/images/yacht.jpg",
+                category: "vehicle",
+                description: "A luxury vessel for sailing and entertainment on the open water."
+            },
+            {
+                id: 36,
+                name: "M1 Abrams",
+                price: 8000000,
+                image: "https://neal.fun/spend/images/m1-abrams.jpg",
+                category: "extreme",
+                description: "The main battle tank of the United States Armed Forces, a powerful military vehicle."
+            },
+            {
+                id: 37,
+                name: "Formula 1 Car",
+                price: 15000000,
+                image: "https://neal.fun/spend/images/formula-1-car.jpg",
+                category: "extreme",
+                description: "A high-performance racing car designed for Formula 1 competition with cutting-edge technology."
+            },
+            {
+                id: 38,
+                name: "Apache Helicopter",
+                price: 31000000,
+                image: "https://neal.fun/spend/images/apache-helicopter.jpg",
+                category: "extreme",
+                description: "A twin-turboshaft attack helicopter with advanced weaponry and targeting systems."
+            },
+            {
+                id: 39,
+                name: "Mansion",
+                price: 45000000,
+                image: "https://neal.fun/spend/images/mansion.jpg",
+                category: "property",
+                description: "An expansive luxury residence with premium amenities, grounds, and features."
+            },
+            {
+                id: 40,
+                name: "Make a Movie",
+                price: 100000000,
+                image: "https://neal.fun/spend/images/make-a-movie.jpg",
+                category: "extreme",
+                description: "Fund and produce a major motion picture with top talent and production values."
+            },
+            {
+                id: 41,
+                name: "Boeing 747",
+                price: 148000000,
+                image: "https://neal.fun/spend/images/boeing-747.jpg",
+                category: "extreme",
+                description: "A wide-body commercial jet airliner, one of the most recognizable aircraft in the world."
+            },
+            {
+                id: 42,
+                name: "Mona Lisa",
+                price: 780000000,
+                image: "https://neal.fun/spend/images/mona-lisa.jpg",
+                category: "extreme",
+                description: "Leonardo da Vinci's masterpiece, the most famous painting in the world (if it were for sale)."
+            },
+            {
+                id: 43,
+                name: "Skyscraper",
+                price: 850000000,
+                image: "https://neal.fun/spend/images/skyscraper.jpg",
+                category: "property",
+                description: "A super-tall high-rise building in a prime urban location."
+            },
+            {
+                id: 44,
+                name: "Cruise Ship",
+                price: 930000000,
+                image: "https://neal.fun/spend/images/cruise-ship.jpg",
+                category: "extreme",
+                description: "A massive passenger ship equipped with amenities, entertainment venues, and accommodations."
+            },
+            {
+                id: 45,
+                name: "NBA Team",
+                price: 2120000000,
+                image: "https://neal.fun/spend/images/nba-team.jpg",
+                category: "extreme",
+                description: "A professional basketball franchise in the National Basketball Association."
+            }
+        ];
+        
+        // DOM elements
+        const moneyDisplay = document.getElementById('moneyDisplay');
+        const moneySpent = document.getElementById('moneySpent');
+        const moneyRemaining = document.getElementById('moneyRemaining');
+        const itemsPurchased = document.getElementById('itemsPurchased');
+        const percentageSpent = document.getElementById('percentageSpent');
+        const progressBar = document.getElementById('progressBar');
+        const itemsGrid = document.getElementById('itemsGrid');
+        const cartItems = document.getElementById('cartItems');
+        const filterContainer = document.getElementById('filterContainer');
+        const receiptBtn = document.getElementById('receiptBtn');
+        const receiptModal = document.getElementById('receiptModal');
+        const closeModal = document.getElementById('closeModal');
+        const receiptItems = document.getElementById('receiptItems');
+        const receiptTotal = document.getElementById('receiptTotal');
+        const receiptDate = document.getElementById('receiptDate');
+        const printReceipt = document.getElementById('printReceipt');
+        const saveBtn = document.getElementById('saveBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const twitterShare = document.getElementById('twitterShare');
+        const facebookShare = document.getElementById('facebookShare');
+        const whatsappShare = document.getElementById('whatsappShare');
+        
+        // Format currency function
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        // Update stats display
+        function updateStats() {
+            const spent = initialMoney - currentMoney;
+            const percentSpent = (spent / initialMoney) * 100;
+            
+            moneyDisplay.textContent = formatCurrency(currentMoney);
+            moneyDisplay.classList.add('pulse');
+            setTimeout(() => moneyDisplay.classList.remove('pulse'), 500);
+            
+            moneySpent.textContent = formatCurrency(spent);
+            moneyRemaining.textContent = formatCurrency(currentMoney);
+            
+            let totalItems = 0;
+            cart.forEach(item => totalItems += item.quantity);
+            itemsPurchased.textContent = totalItems;
+            
+            percentageSpent.textContent = percentSpent.toFixed(2) + '%';
+            progressBar.style.width = percentSpent + '%';
+        }
+        
+        // Update cart display
+        function updateCart() {
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart text-center text-gray-500 py-4">You haven\'t bought anything yet.</div>';
+                return;
+            }
+            
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'flex justify-between items-center py-2 border-b';
+                cartItem.innerHTML = `
+                    <div>
+                        <span class="font-medium">${item.name}</span>
+                        <span class="text-gray-500 ml-2">x${item.quantity}</span>
+                    </div>
+                    <div class="text-yellow-600">${formatCurrency(item.price * item.quantity)}</div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+        }
+        
+        // Create item card
+        function createItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            card.dataset.category = item.category;
+            
+            // Get quantity from cart or default to 0
+            const cartItem = cart.find(i => i.id === item.id);
+            const quantity = cartItem ? cartItem.quantity : 0;
+            
+            card.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <span class="inline-block px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded-full mb-2">${item.category}</span>
+                    <h3 class="text-lg font-semibold mb-1">${item.name}</h3>
+                    <p class="text-yellow-600 font-medium mb-2">${formatCurrency(item.price)}</p>
+                    <p class="text-sm text-gray-600 mb-4">${item.description}</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center border rounded overflow-hidden">
+                            <button class="qty-btn w-8 h-8 flex items-center justify-center bg-gray-100" 
+                                data-id="${item.id}" data-action="decrease" ${quantity === 0 ? 'disabled' : ''}>
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="text" class="w-12 text-center border-0 focus:outline-none" value="${quantity}" readonly>
+                            <button class="qty-btn w-8 h-8 flex items-center justify-center bg-gray-100" 
+                                data-id="${item.id}" data-action="increase">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <button class="buy-btn text-white px-3 py-1 rounded" data-id="${item.id}">
+                            ${quantity === 0 ? 'Buy' : 'Update'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Render all items
+        function renderItems(category = 'all') {
+            itemsGrid.innerHTML = '';
+            
+            const filteredItems = category === 'all' 
+                ? items 
+                : items.filter(item => item.category === category);
+            
+            filteredItems.forEach(item => {
+                const card = createItemCard(item);
+                itemsGrid.appendChild(card);
+                card.classList.add('fade-in');
+            });
+            
+            // Add event listeners to new buttons
+            itemsGrid.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', handleQuantityChange);
+            });
+            
+            itemsGrid.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', handleBuy);
+            });
+        }
+        
+        // Handle quantity change
+        function handleQuantityChange(e) {
+            const btn = e.currentTarget;
+            const itemId = parseInt(btn.dataset.id);
+            const action = btn.dataset.action;
+            const item = items.find(i => i.id === itemId);
+            
+            // Find item in cart or create new one
+            let cartItem = cart.find(i => i.id === itemId);
+            if (!cartItem) {
+                cartItem = {
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: 0
+                };
+                cart.push(cartItem);
+            }
+            
+            // Update quantity
+            if (action === 'increase') {
+                // Check if we can afford one more
+                if (currentMoney >= item.price) {
+                    cartItem.quantity++;
+                    currentMoney -= item.price;
+                } else {
+                    alert("You don't have enough money!");
+                    return;
+                }
+            } else {
+                if (cartItem.quantity > 0) {
+                    cartItem.quantity--;
+                    currentMoney += item.price;
+                }
+            }
+            
+            // Remove item from cart if quantity is 0
+            if (cartItem.quantity === 0) {
+                cart = cart.filter(i => i.id !== itemId);
+            }
+            
+            // Update UI
+            updateStats();
+            updateCart();
+            renderItems(document.querySelector('.filter-btn.active').dataset.category);
+        }
+        
+        // Handle buy button click
+        function handleBuy(e) {
+            const btn = e.currentTarget;
+            const itemId = parseInt(btn.dataset.id);
+            const item = items.find(i => i.id === itemId);
+            
+            // Find quantity input
+            const quantityInput = btn.closest('.item-card').querySelector('input');
+            const newQuantity = parseInt(quantityInput.value) + 1;
+            
+            // Check if we can afford one more
+            if (currentMoney >= item.price) {
+                // Find item in cart or create new one
+                let cartItem = cart.find(i => i.id === itemId);
+                if (!cartItem) {
+                    cartItem = {
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        quantity: 0
+                    };
+                    cart.push(cartItem);
+                }
+                
+                cartItem.quantity++;
+                currentMoney -= item.price;
+                
+                // Update UI
+                updateStats();
+                updateCart();
+                renderItems(document.querySelector('.filter-btn.active').dataset.category);
+                
+                // Animate button
+                btn.classList.add('pulse');
+                setTimeout(() => btn.classList.remove('pulse'), 500);
+            } else {
+                alert("You don't have enough money!");
+            }
+        }
+        
+        // Filter items by category
+        function handleFilter(e) {
+            const btn = e.target;
+            if (!btn.classList.contains('filter-btn')) return;
+            
+            // Update active class
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Render filtered items
+            renderItems(btn.dataset.category);
+        }
+        
+        // Generate receipt
+        function generateReceipt() {
+            if (cart.length === 0) {
+                alert("You haven't bought anything yet!");
+                return;
+            }
+            
+            // Set receipt date
+            const now = new Date();
+            receiptDate.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+            
+            // Add receipt items
+            receiptItems.innerHTML = '';
+            cart.forEach(item => {
+                const receiptItem = document.createElement('div');
+                receiptItem.className = 'flex justify-between py-1';
+                receiptItem.innerHTML = `
+                    <span>${item.name} x${item.quantity}</span>
+                    <span>${formatCurrency(item.price * item.quantity)}</span>
+                `;
+                receiptItems.appendChild(receiptItem);
+            });
+            
+            // Set total
+            const spent = initialMoney - currentMoney;
+            receiptTotal.textContent = formatCurrency(spent);
+            
+            // Show modal
+            receiptModal.classList.add('active');
+        }
+        
+        // Close modal
+        function closeReceiptModal() {
+            receiptModal.classList.remove('active');
+        }
+        
+        // Print receipt
+        function handlePrintReceipt() {
+            window.print();
+        }
+        
+        // Save to localStorage
+        function saveProgress() {
+            const data = {
+                currentMoney,
+                cart
+            };
+            localStorage.setItem('billionaireSpending', JSON.stringify(data));
+            alert("Progress saved!");
+        }
+        
+        // Load from localStorage
+        function loadProgress() {
+            const savedData = localStorage.getItem('billionaireSpending');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                currentMoney = data.currentMoney;
+                cart = data.cart;
+                updateStats();
+                updateCart();
+                renderItems();
+            }
+        }
+        
+        // Reset everything
+        function resetProgress() {
+            if (confirm("Are you sure you want to reset all progress?")) {
+                currentMoney = initialMoney;
+                cart = [];
+                localStorage.removeItem('billionaireSpending');
+                updateStats();
+                updateCart();
+                renderItems();
+            }
+        }
+        
+        // Toggle dark/light theme
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // Share progress
+        function shareOnTwitter() {
+            const spent = initialMoney - currentMoney;
+            const percentSpent = ((spent / initialMoney) * 100).toFixed(2);
+            const text = `I've spent ${formatCurrency(spent)} (${percentSpent}%) of a billionaire's fortune. Try it yourself!`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+        
+        function shareOnFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+        
+        function shareOnWhatsapp() {
+            const spent = initialMoney - currentMoney;
+            const percentSpent = ((spent / initialMoney) * 100).toFixed(2);
+            const text = `I've spent ${formatCurrency(spent)} (${percentSpent}%) of a billionaire's fortune. Try it yourself!`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + window.location.href)}`, '_blank');
+        }
+        
+        // Load theme preference
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                const icon = themeToggle.querySelector('i');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
+        
+        // Initialize
+        function init() {
+            // Render items
+            renderItems();
+            
+            // Set up event listeners
+            filterContainer.addEventListener('click', handleFilter);
+            receiptBtn.addEventListener('click', generateReceipt);
+            closeModal.addEventListener('click', closeReceiptModal);
+            printReceipt.addEventListener('click', handlePrintReceipt);
+            saveBtn.addEventListener('click', saveProgress);
+            resetBtn.addEventListener('click', resetProgress);
+            themeToggle.addEventListener('click', toggleTheme);
+            twitterShare.addEventListener('click', shareOnTwitter);
+            facebookShare.addEventListener('click', shareOnFacebook);
+            whatsappShare.addEventListener('click', shareOnWhatsapp);
+            
+            // Close modal when clicking outside
+            receiptModal.addEventListener('click', (e) => {
+                if (e.target === receiptModal) {
+                    closeReceiptModal();
+                }
+            });
+            
+            // Load saved progress and theme
+            loadProgress();
+            loadTheme();
+        }
+        
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
